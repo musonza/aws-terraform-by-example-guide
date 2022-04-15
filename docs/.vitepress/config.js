@@ -7,24 +7,15 @@ module.exports = {
     },
 
     themeConfig: {
-        repo: 'vuejs/vitepress',
+        repo: 'musonza/aws-terraform-by-example-vitepress',
         docsDir: 'docs',
-        docsBranch: 'main',
+        docsBranch: 'master',
         editLinks: true,
         editLinkText: 'Edit this page on GitHub',
         lastUpdated: 'Last Updated',
 
-        nav: [
-            {
-                text: 'Release Notes',
-                link: 'https://github.com/vuejs/vitepress/releases'
-            }
-        ],
-
         sidebar: {
-            '/guide/': getGuideSidebar(),
-            '/config/': getConfigSidebar(),
-            '/': getGuideSidebar()
+            '/guide/': getGuideSidebar()
         }
     }
 }
@@ -36,26 +27,10 @@ function getGuideSidebar() {
             children: [
                 { text: 'About this guide', link: '/guide/' },
                 { text: 'Requirements', link: '/guide/2-requirements' },
-                { text: 'Project Setup', link: '/guide/3-project-setup' },
-                { text: 'Chatbot Creation', link: '/guide/4-chatbot-creation' },
-                { text: 'Chatbot code hooks', link: '/guide/5-chatbot-code-hooks' }
-            ]
-        }
-    ]
-}
-
-function getConfigSidebar() {
-    return [
-        {
-            text: 'App Config',
-            children: [{ text: 'Basics', link: '/config/basics' }]
-        },
-        {
-            text: 'Theme Config',
-            children: [
-                { text: 'Homepage', link: '/config/homepage' },
-                { text: 'Algolia Search', link: '/config/algolia-search' },
-                { text: 'Carbon Ads', link: '/config/carbon-ads' }
+                { text: 'Project setup', link: '/guide/3-project-setup' },
+                { text: 'Chatbot creation', link: '/guide/4-chatbot-creation' },
+                { text: 'Chatbot code hooks', link: '/guide/5-chatbot-code-hooks' },
+                { text: 'Data storage', link: '/guide/6-data-storage' }
             ]
         }
     ]

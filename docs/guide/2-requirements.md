@@ -14,7 +14,6 @@ See more at https://aws.amazon.com/free/free-tier-faqs/
 
 A basic understanding of Terraform is required to go through the activities. Visit https://www.terraform.io/intro if you don't have Terraform setup on your machine. You can check whether you have Terraform by running the command below in your terminal.
 
-{line-numbers: false}
 ```bash
 ~ $ terraform -v
 Terraform v1.1.7

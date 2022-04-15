@@ -564,3 +564,5 @@ If you refresh the console you will see that our bot is now associated with all 
 ![Bot intents association](../images/bot_intent_association.png)
 
 You can now test your intents in the Test Bot window. However, as I mentioned earlier, there isn't much being done by our intents. We need to hook some code hook to our bot in the form of AWS Lambda function. So next we will introduce AWS Lambda and update our intents' fulfillment activity to a lambda function.
+
+## Summary
