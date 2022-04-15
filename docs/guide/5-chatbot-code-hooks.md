@@ -73,7 +73,7 @@ exports.handler = (event, context, callback) => {
 };
 ```
 
-### Terraform: lambda function
+### Terraform: Lambda function
 
 Now that we have our code for Lambda, let's work on the Terraform declaration of the function. Create a new file `lambda.tf` and add the following code block.
 
