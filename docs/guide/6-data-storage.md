@@ -197,7 +197,7 @@ You can test the bot again and your post should be created and stored in DynamoD
 
 Let's work on the logic to read a post from our database. We will need to parse a `PostId` to our chatbot and it will return a post for us. Add logic to handle `ReadPost` intent as below.
 
-```js{5,9-25,28,33-34,40-42,54-55}
+```js {5,9-25,28,33-34,40-42,54-55}
 'use strict';
 
 // ...
