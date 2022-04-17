@@ -235,10 +235,10 @@ async function dispatch(intentRequest, context, callback) {
 
     switch (intentName) {
         case CREATE_POST_INTENT:
-            responseContent = await createPost(intentRequest, context)
+            createPost(intentRequest, context)
             break;
         case READ_POST_INTENT:
-            readPost(intentRequest)
+            responseContent = await readPost(intentRequest);
             break;
         default:
             throw new Error(`Intent with name ${intentName} not supported`);
@@ -293,6 +293,11 @@ data "aws_iam_policy_document" "allow_dynamodb" {
 }
 ```
 
+Apply the new IAM policy by running `terraform apply`.
+
+Test the intent again and you should see a successful response.
+
+![Read post lex](../images/read_post_response.png)
 
 
 
