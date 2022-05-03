@@ -15,7 +15,8 @@ module.exports = {
         lastUpdated: 'Last Updated',
 
         sidebar: {
-            '/guide/': getGuideSidebar()
+            '/guide/': getGuideSidebar(),
+            '/': getGuideSidebar()
         }
     }
 }
