@@ -456,6 +456,7 @@ Lets talk about the updates we have made. In our `UpdateExpression` we have used
 
 We have also added a `ConditionExpression` that checks whether the provided `PostId` exists. On updates, DynamoDb will create a new Item if the provided Item does not exist. This is not what we want for our use case. If the condition check fails, an exception will be thrown. We will handle more exceptions later on.
 
+Apply the changes and testing updates should work fine now.
 
 ### DeletePost
 
