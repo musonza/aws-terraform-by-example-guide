@@ -274,7 +274,7 @@ Now if you test reading a post using the test bot window you will get an error b
 
 Update the `data "aws_iam_policy_document" "allow_dynamodb"` block in your `lambda.tf` file to the following.
 
-```hcl{9-13}
+```hcl{9-14}
 # We need to grant Lambda Dynamodb permissions
 # So let's create an iam policy that allows operations on dynamodb
 # Here we have specified all actions, however,
@@ -285,6 +285,7 @@ data "aws_iam_policy_document" "allow_dynamodb" {
     effect    = "Allow"
     actions   = [
         "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
         "dynamodb:GetItem",
         "dynamodb:DeleteItem"
     ]
@@ -300,6 +301,163 @@ Test the intent again and you should see a successful response.
 ![Read post lex](../images/read_post_response.png)
 
 
+### UpdatePost
+
+Next up is the logic for the update intent. For now, we won't worry about authentication and authorization as we will address that later when we look at Amazon Cognito.
+
+Make the following updates to `src/classifieds_lambda.js`
+
+```js{3,7-17,24-26}
+'use strict';
+// ...
+const UPDATE_POST_INTENT = 'UpdatePost'
+
+// ...
+
+async function updatePost(intentRequest) {
+    const slots = intentRequest.currentIntent.slots;
+    payload = {...slots};
+
+    await dynamodb
+        .put({
+            TableName: TABLE_NAME,
+            Item: payload,
+        })
+        .promise();
+}
+
+// --------------- Events -----------------------
+async function dispatch(intentRequest, context, callback) {
+// ...
+    switch (intentName) {
+        // ...
+        case UPDATE_POST_INTENT:
+            responseContent = await updatePost(intentRequest);
+            break;
+        default:
+            throw new Error(`Intent with name ${intentName} not supported`);
+    }
+}
+```
+
+Apply the changes by running `terraform apply`. When you try to test the bot you will notice that after providing the `PostId` the intent is fulfilled right away. The reason is because Amazon Lex will not implicityly prompt for slots that are not marked as required. If you look back on our definition of `UpdateIntent` you will see that we have both slots set as not required. It would be bad for Lex to make assumptions as you may have other cases where you want to ignore the slots.
+
+Let's make updates to check for empty optional slots and prompt the user to provide the information.
+
+```js{4,5,10-25}
+    //...
+    // will store our response contet to be sent back to Lex
+    let responseContent = ''
+    let slotToElicit;
+    let message;
+
+    switch (intentName) {
+        // ...
+        case UPDATE_POST_INTENT:
+            // check for optional slots and prompt user input
+            if (!intentRequest.currentIntent.slots.PostTitle) {
+                slotToElicit = 'PostTitle'
+                message = 'Enter a new title of your post. Enter 0 to keep existing title.'
+                return callback(
+                    elicitSlot(sessionAttributes, intentName, slots, slotToElicit, message)
+                );
+            }
+
+            if (!intentRequest.currentIntent.slots.PostDescription) {
+                slotToElicit = 'PostDescription'
+                message = 'Enter new description of your post. Enter 0 if you want to keep existing description.'
+                return callback(
+                    elicitSlot(sessionAttributes, intentName, slots, slotToElicit, message)
+                );
+            }
+
+            responseContent = await updatePost(intentRequest);
+            break;
+        default:
+            throw new Error(`Intent with name ${intentName} not supported`);
+    }
+
+    //...
+```
+
+Apply the changes and test again. You are now prompted to provide title and description of your post. What if you want to change one slot only? We have added an option to provide a response of zero when we want to maintain existing changes. However, if we try using that option our attributes are updated with zero values. So let's add checks for that. See highlighted changes next.
+
+```js{3-5,7-18}
+async function updatePost(intentRequest) {
+    const slots = intentRequest.currentIntent.slots;
+    payload = {
+        PostId: slots.PostId
+    }
+
+    // no updates to make
+    if (slots.PostTitle == 0 && slots.PostDescription == 0) {
+        return;
+    }
+
+    if (slots.PostTitle != 0) {
+        payload.PostTitle = slots.PostTitle
+    }
+
+    if (slots.PostDescription != 0) {
+        payload.PostDescription = slots.PostDescription
+    }
+
+    // ...
+}
+```
+
+After aplying the changes with `terraform appply`, test the bot again. You will notice that if you respond to keep an existing attribute value, DynamoDb is going to remove the attribute because we are using a `PutItem` operation. The `PutItem` operation completely overwrites an existing Item in the table, meaning if we don't provide the existing attributes, we won't have them after the operation.
+
+Instead, we would like to modify the existing Item and keep other attributes untouched. To achieve this we will use the `UpdateItem` operation, which our DynamoDb JavaScript client delegates via its `update` method. With the `UpdateItem` operation we are going to need to provide an **update expression** - an update expression specifies how `UpdateItem` will modify the attributes of an item. 
+
+Lets make changes to our lambda function to see how that will look.
+
+```js{3-5,13-14,18-19,22-31,35}
+async function updatePost(intentRequest) {
+    const slots = intentRequest.currentIntent.slots;
+    payload = {}
+    let updateExpression = `SET`
+    let updateExpressionActions = []
+
+    // no updates to make
+    if (slots.PostTitle == 0 && slots.PostDescription == 0) {
+        return;
+    }
+
+    if (slots.PostTitle != 0) {
+        payload[`:PostTitle`] = slots.PostTitle
+        updateExpressionActions.push(" PostTitle = :PostTitle")
+    }
+
+    if (slots.PostDescription != 0) {
+        payload[`:PostDescription`] = slots.PostDescription
+        updateExpressionActions.push(" PostDescription = :PostDescription")
+    }
+
+    let params = {
+        TableName: TABLE_NAME,
+        Key: {
+            PostId: slots.PostId
+        },
+        // example: SET PostTitle = :PostTitle, PostDescription = :PostDescription 
+        UpdateExpression: updateExpression + updateExpressionActions.join(", "),
+        ExpressionAttributeValues: payload,
+        // don't create a new item if it doesn't exist
+        ConditionExpression: 'attribute_exists(PostId)',
+      };
+
+    await dynamodb
+        .update(params)
+        .promise();
+}
+```
+
+Lets talk about the updates we have made. In our `UpdateExpression` we have used `SET` - an action to add one or more attributes to an item. Any attributes that already exists will be overwritten by the new values.
+
+We have also added a `ConditionExpression` that checks whether the provided `PostId` exists. On updates, DynamoDb will create a new Item if the provided Item does not exist. This is not what we want for our use case. If the condition check fails, an exception will be thrown. We will handle more exceptions later on.
 
 
 ### DeletePost
+
+Moving on to `DeletePost` intent.
+

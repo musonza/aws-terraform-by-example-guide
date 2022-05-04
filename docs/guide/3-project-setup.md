@@ -92,10 +92,15 @@ provider "aws" {
 // ...
 ```
 
-Now we need to create the configuration file. To do so we will edit `~/.aws/credential` file. Note, you will need to have AWS cli installed on your system first.
+Now we need to create the configuration file. To do so we will edit `~/.aws/credentials` file. Note, you will need to have AWS cli installed on your system first.
+
+
+::: tip AWS cli configuration
+If you have just installed AWS cli, you need to run the command `aws configure` and follow the steps to complete configuration.
+:::
 
 ```bash
-$ vim ~/.aws/credential
+$ vim ~/.aws/credentials
 ```
 
 ```txt
