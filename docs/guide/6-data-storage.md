@@ -460,5 +460,40 @@ Apply the changes and testing updates should work fine now.
 
 ### DeletePost
 
-Moving on to `DeletePost` intent.
+Moving on to `DeletePost` intent. This should be an easy one. Add the highlighted logic and apply your changes by running `terraform apply`.
 
+```js{4,8-20,27-29}
+'use strict';
+
+// ...
+const DELETE_POST_INTENT = 'DeletePost'
+
+// ...
+
+async function deletePost(intentRequest) {
+    const slots = intentRequest.currentIntent.slots;
+    let params = {
+        TableName: TABLE_NAME,
+        Key: {
+            PostId: slots.PostId
+        },
+    };
+
+    return await dynamodb
+        .delete(params)
+        .promise();
+}
+
+// --------------- Events -----------------------
+async function dispatch(intentRequest, context, callback) {
+    // ...
+    switch (intentName) {
+        // ...
+        case DELETE_POST_INTENT:
+            responseContent = await deletePost(intentRequest);
+            break;
+        default:
+            throw new Error(`Intent with name ${intentName} not supported`);
+    }
+}
+```
