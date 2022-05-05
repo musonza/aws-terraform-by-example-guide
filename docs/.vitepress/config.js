@@ -31,7 +31,8 @@ function getGuideSidebar() {
                 { text: 'Project setup', link: '/guide/3-project-setup' },
                 { text: 'Chatbot creation', link: '/guide/4-chatbot-creation' },
                 { text: 'Chatbot code hooks', link: '/guide/5-chatbot-code-hooks' },
-                { text: 'Data storage', link: '/guide/6-data-storage' }
+                { text: 'Data storage', link: '/guide/6-data-storage' },
+                { text: 'Chatbot Web Interface', link: '/guide/7-chatbot-web-interface' },
             ]
         }
     ]
