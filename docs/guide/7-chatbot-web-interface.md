@@ -214,5 +214,14 @@ resource "aws_cognito_user_pool" "classifieds" {
 }
 ```
 
+Run `terraform apply` to provision your new resources.
 
-<!-- python -m SimpleHTTPServer 8000 -->
+Once resources are created, navigate to AWS console and search for **Cognito**. You should find a link to **Federated identities**
+
+![cognito dashboard](../images/cognito_dashboard.png)
+
+Click through the link and look for your identity pool. Copy the identity pool id.
+
+![pool](../images/identity_pool_id.png)
+
+It's ok for this identity pool id to be in your html or JavaScript files. However, as an additional security we are going to eventually restrict our pool to aunthenticated users later.
