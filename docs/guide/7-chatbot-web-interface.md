@@ -22,7 +22,7 @@ $ git clone https://github.com/aws-samples/aws-lex-web-ui.git
 Remove the remote origin from the clone repo
 
 ```bash
-$ cd aws-lex-web-ui && git remote remove origin
+$ cd aws-lex-web-ui && git remote remove origin && rm -rf .git
 ```
 
 We have the following options to deploying and integrating the chatbot UI:
@@ -216,7 +216,40 @@ resource "aws_cognito_user_pool" "classifieds" {
 
 Run `terraform apply` to provision your new resources.
 
-Once resources are created, navigate to AWS console and search for **Cognito**. You should find a link to **Federated identities**
+
+You can obtain your pool id from Terraform output as seen next:
+
+```bash
+...
+aws_cognito_user_pool.classifieds: Creating...
+aws_cognito_identity_pool.main: Creation complete after 0s [id=us-east-1:a1e0d5a9-e1f4-4bbf-b383-cf92aa462b5b]
+...
+```
+
+You can also use `terraform console`
+
+```txt
+bash-3.2$ terraform console
+> resource.aws_cognito_identity_pool.main
+{
+  "allow_classic_flow" = false
+  "allow_unauthenticated_identities" = true
+  "arn" = "arn:aws:cognito-identity:us-east-1:082920454967:identitypool/us-east-1:a1e0d5a9-e1f4-4bbf-b383-cf92aa462b5b"
+  "cognito_identity_providers" = toset([])
+  "developer_provider_name" = ""
+  "id" = "us-east-1:a1e0d5a9-e1f4-4bbf-b383-cf92aa462b5b"
+  "identity_pool_name" = "classifieds"
+  "openid_connect_provider_arns" = toset(null) /* of string */
+  "saml_provider_arns" = tolist(null) /* of string */
+  "supported_login_providers" = tomap(null) /* of string */
+  "tags" = tomap(null) /* of string */
+  "tags_all" = tomap({})
+}
+>
+```
+
+
+Alternatively, you can find the pool id in AWS console. Navigate to AWS console and search for **Cognito**. You should find a link to **Federated identities**
 
 ![cognito dashboard](../images/cognito_dashboard.png)
 
@@ -224,4 +257,48 @@ Click through the link and look for your identity pool. Copy the identity pool i
 
 ![pool](../images/identity_pool_id.png)
 
-It's ok for this identity pool id to be in your html or JavaScript files. However, as an additional security we are going to eventually restrict our pool to aunthenticated users later.
+It's ok for this identity pool id to be in your html or JavaScript files. However, as an additional security we are going to eventually restrict our pool to aunthenticated users only later.
+
+
+## Configure Chatbout UI
+
+Chatbot UI provides us with some default configuration which you can find in the file  `src/aws-lex-web-ui/src/config/default-lex-web-ui-loader-config.json`. We will override or add our own configuration to `src/aws-lex-web-ui/src/config/lex-web-ui-loader-config.json`.
+
+Make the following updates to `lex-web-ui-loader-config.json`
+
+```json
+{
+  "region": "us-east-1",
+  "cognito": {
+    "poolId": "us-east-1:a1e0d5a9-e1f4-4bbf-b383-cf92aa462b5b",
+    "aws_cognito_region": "us-east-1",
+    "region": "us-east-1"
+  },
+  "lex": {
+    "botName": "Classifieds",
+    "initialText": "You can ask me for help adding posts. Just type \"create post\" or click on the mic and say it.",
+    "initialSpeechInstruction": "Say 'Create Post' to get started.",
+    "initialUtterance": "",
+    "region": "us-east-1"
+  },
+  "ui": {
+    "parentOrigin": "http://localhost:8000",
+    "toolbarTitle": "Classifieds",
+    "pageTitle": "Order Flowers Bot",
+    "toolbarLogo": "",
+    "positiveFeedbackIntent": "Thumbs up",
+    "negativeFeedbackIntent": "Thumbs down",
+    "helpIntent": "Help",
+    "helpContent": {}
+  },
+  "iframe": {
+    "iframeOrigin": "",
+    "shouldLoadIframeMinimized": false,
+    "iframeSrcPath": "/index.html#/?lexWebUiEmbed=true"
+  }
+}
+```
+
+Rebuild the app again and navigate to the provided url on your machine.
+
+![UI first post](../images/lex-ui-first-post.png)
