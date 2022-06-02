@@ -302,3 +302,5 @@ Make the following updates to `lex-web-ui-loader-config.json`
 Rebuild the app again and navigate to the provided url on your machine.
 
 ![UI first post](../images/lex-ui-first-post.png)
+
+The next thing we are going to cover is how we can use a cloud-based integrated development environment  (IDE). The approach has a lot of benefits that we will cover. After setting up the cloud-based integrated development environment we will continue building our application.

@@ -26,6 +26,6 @@ Terraform is an Infrastructure as Code tool from HashiCorp that lets you define 
 
 A text editor to manage our Terraform files is going to be handy. Our choice is going to be Visual Studio Code (VS Code). Once VS Code is installed, you can search for a Terraform extension to add to your editor. Further instructions on the Terraform extension can be found here https://github.com/hashicorp/vscode-terraform. Terraform extension will add editing features for Terraform files such as syntax highlighting, Intellisense, code formatting, etc.
 
-## Git (optional)
+## Git
 
-The beauty of  Infrastructure as Code is the ability to push changes to version control. We will incrementally work through our application infrastructure and track the history of changes via git as our code evolves. If you don’t have git setup, visit https://git-scm.com to get started.
+The beauty of  Infrastructure as Code is the ability to push changes to version control. We will incrementally work through our application infrastructure and track the history of changes via git as our code evolves. If you don’t have git setup, visit https://git-scm.com to get started. You will also need a code hosting platform for your source control, in my case I will use GitHub. You will need something like GitHub when we setup AWS Cloud9 later on.
