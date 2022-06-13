@@ -6,7 +6,7 @@ While you can/will be using your text editor, I will use Unix-type commands to s
 
 First, create a directory for all our code on any location on your computer.
 
-"`bash
+```bash
 mkdir aws-terraform-by-example
 ```
 
@@ -47,14 +47,13 @@ We have specified AWS as a required provider. We have also identified a region d
 
 Now to pull in the providers, we run the following command in the root directory.
 
-"`bash
+```bash
 $ terraform init
 ```
 
 Once the command is done running, you should see an output similar to the below.
 
-{line-numbers: false}
-"`txt
+```txt
 Initializing the backend...
 
 Initializing provider plugins...
@@ -77,7 +76,7 @@ If you ever set or change modules or backend configuration for Terraform, rerun 
 
 For Terraform to be able to create resources on our AWS account, it needs admin permissions via an IAM role. You may have a default profile for AWS CLI setup already. However, it's good practice to have specific profiles for specific projects. Edit the AWS provider block of providers.tf and add `profile = "aws-terraform-example"` as below.
 
-"`hcl
+```hcl
 // ...
 provider "aws" {
   region  = var.aws_region
@@ -125,7 +124,7 @@ git init
 
 Before we commit our changes to source control, we must ensure we ignore some files' versioning. Create a new file `.gitignore` and add the following:
 
-```gitignote
+```
 # Local .terraform directories
 **/.terraform/*
 
@@ -166,6 +165,6 @@ This file was obtained from https://github.com/github/gitignore/blob/main/Terraf
 
 Let's add commit our changes to source control.
 
-"`bash
+```bash
 git add . && git commit -m "Initialize Terraform with AWS provider"
 ```

@@ -1,6 +1,9 @@
 module.exports = {
+    lang: 'en-US',
     title: 'AWS and Terraform by example',
     description: 'AWS and Terraform by example',
+
+    lastUpdated: true,
 
     markdown: {
         lineNumbers: true
@@ -12,7 +15,17 @@ module.exports = {
         docsBranch: 'master',
         editLinks: true,
         editLinkText: 'Edit this page on GitHub',
-        lastUpdated: 'Last Updated',
+        lastUpdatedText: 'Last Updated',
+
+        socialLinks: [
+            { icon: 'github', link: 'https://github.com/musonza' },
+            { icon: 'linkedin', link: 'https://linkedin.com/in/srfullstackdeveloper' },
+        ],
+
+        footer: {
+            message: 'Released under the MIT License.',
+            copyright: 'Copyright © 2022-present Tinashe Musonza'
+        },
 
         sidebar: {
             '/guide/': getGuideSidebar(),
@@ -25,7 +38,8 @@ function getGuideSidebar() {
     return [
         {
             text: 'Guide',
-            children: [
+            collapsible: false,
+            items: [
                 { text: 'About this guide', link: '/guide/' },
                 { text: 'Requirements', link: '/guide/2-requirements' },
                 { text: 'Project setup', link: '/guide/3-project-setup' },
