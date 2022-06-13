@@ -4,7 +4,7 @@
 
 For our chatbot, we are going to use Amazon Lex. Amazon Lex is an AWS service for building conversational interfaces for voice and text applications. It is the same conversational engine that powers Amazon Alexa. This engine affords us with deep functionality of natural language understanding (NLU) and automatic speech recognition (ASR).
 
-Terraform official providers are well documented. For Amazon Lex we can check https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lex_bot for usage and all the required documents.
+Terraform official providers are well documented. For example, for Amazon Lex, we can check https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lex_bot for usage and all the required documents.
 
 Create a new file `lex.tf` within your `aws-terraform-by-example` directory and add the following block.
 
@@ -23,13 +23,13 @@ resource "aws_lex_bot" "classifieds" {
 }
 ```
 
-The nice thing about Terraform is that it allows you perfom a dry run which lets you preview the changes that Terraform plans to make to your infrastructure. You can do so by running the following command.
+The nice thing about Terraform is that it allows you to perform a dry run which lets you preview the changes Terraform plans to make to your infrastructure. You can do so by running the following command.
 
 ```bash
 $ terraform plan
 ```
 
-Running the plan command you should expect an error similar to below
+Running the plan command, you should expect an error similar to below
 
 ```text
 ╷
@@ -41,9 +41,9 @@ Running the plan command you should expect an error similar to below
 │ At least 1 "intent" blocks are required.
 ```
 
-I intentionally ommitted some required arguments to show that Terraform will perform necessary validations on the resources we intent to create, so let's fix that. Amazon Lex requires us to define at least an intent (goal) for our users that use the bots. Lex will use a specific intent to engage a user in a conversation to elicit information and fulfill the user's intent / goal. A user can have an intent to book a flight, order flowers, etc. It's worth noting that a single bot can have multiple different intents.
+I intentionally omitted some required arguments to show that Terraform will perform necessary validations on the resources we intend to create, so let's fix that. Amazon Lex requires us to define at least an intent (goal) for our users that use the bots. Lex will use a specific intent to engage a user in a conversation to elicit information and fulfill the user's intent/goal. For example, a user can have an intent to book a flight, order flowers, etc. It's worth noting that a single bot can have multiple different intents.
 
-Our bot is going to contain four intents to start with. The intents will be as follows:
+Our bot is going to contain four intents to start. The intents will be as follows:
 
 **CreatePost**
 The user intents to create a new post.
@@ -130,7 +130,7 @@ resource "aws_lex_intent" "create_post" {
 }
 ```
 
-Run `terraform plan` command again and you should see output that says two resources will be created. Since we are happy with the plan, lets go ahead and create the resources by running the `apply` command. You will get a chance to confirm resource creation.
+Run `terraform plan` command again, and you should see an output that says two resources will be created. Since we are happy with the plan, let's go ahead and create the resources by running the `apply` command. You will get a chance to confirm resource creation.
 
 ```bash
 $ terraform apply
@@ -153,16 +153,15 @@ aws_lex_bot.classifieds: Creating...
 aws_lex_bot.classifieds: Creation complete after 1s [id=Classifieds]
 ```
 
-Now if you navigate to your AWS console and search for "Lex", you will notice that a bot was created.
+Now, if you navigate to your AWS console and search for "Lex," you will notice that a bot was created.
 
 ![Bot created](../images/bot_created.png)
 
-If you click on the bot you will also notice the `CreatePost` intent.
+You will also notice the `CreatePost` intent if you click on the bot.
 
 ![Intent created](../images/intent_created.png)
 
-
-To clean up and delete all resources when done, you can run `terraform destroy`. Let's run the destroy command and make it a habit to avoid incurring AWS costs on test environments. Once you run the command you will see the following output.
+You can run ' terraform destroy' to clean up and delete all resources when done. For example, let's run the destroy command and make it a habit to avoid incurring AWS costs on test environments. Once you run the command, you will see the following output.
 
 ```txt
 Plan: 0 to add, 0 to change, 2 to destroy.
@@ -183,18 +182,18 @@ Destroy complete! Resources: 2 destroyed.
 
 # Re-organizing Terraform files
 
-Before we move on to creating additional intents, you will notice that our `lex.tf` can potentially grow to a size we can not easily manage. The nice thing about Terraform is related resource declarations don't have to be in the same file. So let's create a file to add our bot intents.
+Before we move on to creating other intents, you will notice that our `lex.tf` can potentially grow to a size we can not easily manage. The nice thing about Terraform is related resource declarations don't have to be in the same file. So let's create a file to add our bot intents.
 
 Create a new file `lex_intents.tf` within your `aws-terraform-by-example` directory. We are going to move the `resource "aws_lex_intent" "create_post"` from `lex.tf` to `lex_intents.tf`.
 
 ```hcl
-#  Intents - Thesea are actions that the user wants to perfom
+#  Intents - These are actions that the user wants to perform
 resource "aws_lex_intent" "create_post" {
 
   # this is the final state of the intent, normally with a closing message and
   # some additional information for the user; e.g. for a flight booking
-  # you could confirm that the ? flight is booked, along
-  # with a brief summary of the route
+  # you could confirm that the? flight is booked, along
+  # with a summary of the route
   # and the flight number that the user has been booked onto
   fulfillment_activity {
     type = "ReturnIntent"
@@ -203,7 +202,7 @@ resource "aws_lex_intent" "create_post" {
   name = "CreatePost"
 
   # Utterances - textual representations of what a user
-  # has to type or say in order to trigger an intent.
+  # has to type or say to trigger an intent.
   # An intent can contain many different utterances,
   # allowing users to trigger the bot using different phrases
   sample_utterances = [
@@ -264,13 +263,13 @@ resource "aws_lex_bot" "classifieds" {
 }
 ```
 
-If you run `terraform apply` again your resources will be created again. Now that we have specified a location for our intents, let's go ahead and add additional requirements to CreatePost intent as well as cretae the rest of the intents.
+If you run `terraform apply` again, your resources will be created again. Now that we have specified a location for our intents, let's go ahead and add additional requirements to CreatePost intent and make the rest of the intents.
 
 ## Bot intents
 
 ### CreatePost intent
 
-Earlier we created a `CreatePost` intent and specified `PostTitle` slot. Remember, slots are data items that the bot intent needs in order to be able to fulfill its task. For post creation in our app we will need to know the title and description at mimimum. We will talk about additional items like images later on.
+Earlier, we created a `CreatePost` intent and specified `PostTitle` slot. Remember, slots are data items that the bot intent needs in order to be able to fulfill its task. For post creation in our app, we need to know the title and description at a minimum. We will talk about additional items like images later on.
 
 Go ahead and add `PostDescription` slot to the `CreatePost` intent. You can add it below the `PostTitle` slot as shown below.
 
@@ -305,11 +304,11 @@ Go ahead and add `PostDescription` slot to the `CreatePost` intent. You can add 
 
 Run `terraform apply` to re-create the resources.
 
-Amazon Lex provides us with a Test Bot window to test our changes easily. However, if you navigate to the bot in the console you will notice that the input for Test Bot window is disabled. This is because Lex bot needs to be build before we can test.
+Amazon Lex provides a Test Bot window to test our changes quickly. However, if you navigate to the bot in the console, you will notice that the input for the Test Bot window is disabled because Lex bot needs to be built before we can test.
 
 ![Test Bot window disabled](../images/lex_test_disabled.png)
 
-In our case, we don't want to keep manually building the bot each time we apply changes using Terraform. To automatically build the bot we need to update `lex.tf` as follows.
+In our case, we don't want to keep manually building the bot when we apply Terraform changes. To automatically build the bot, we need to update `lex.tf` as follows.
 
 ```hcl
 // Create our lex bot
@@ -321,13 +320,13 @@ resource "aws_lex_bot" "classifieds" {
 }
 ```
 
-We have added `process_behavior` element. Amazon Lex will build the bot so that it can be run. If you set the value to `SAVE`, which is also the default value, Amazon Lex saves the bot, but doesn't build it.
+We have added `process_behavior` element. Amazon Lex will build the bot so that it can be run. If you set the value to `SAVE`, which is also the default value, Amazon Lex saves the bot but doesn't build it.
 
-Apply the changes by running `terraform apply`. Navigate the lex console and refresh the window if you were already screen. You should now be able to test your bot as seen in the next screenshot.
+Apply the changes by running `terraform apply`. Then, navigate to the lex console and refresh the window if you were already screen. You should now be able to test your bot, as seen in the following screenshot.
 
 ![Test Bot window enabled](../images/lex_build_test_enabled.png)
 
-At this point our bot is not doing much. It's just returning the data we provided it and not actually triggering a post creation somewhere. This is because the `fulfillment_activity` type is set to `ReturnIntent` in `lex.tf`.
+At this point, our bot is not doing much. It's just returning the provided data and not triggering a post creation somewhere. This is because the `fulfillment_activity` type is set to `ReturnIntent` in `lex.tf`.
 
 ```hcl
   fulfillment_activity {
@@ -335,11 +334,11 @@ At this point our bot is not doing much. It's just returning the data we provide
   }
 ```
 
-We will address the `fulfillment_activity` later by integrating it with a code hook in the form of a AWS Lambda function. For now let's continue addressing the rest of the intents.
+We will address the `fulfillment_activity` later by integrating it with a code hook in the form of an AWS Lambda function. For now, let's continue addressing the rest of the intents.
 
 ### ReadPost intent
 
-Our users may intent to view post details for a specific `PostId`. Let's create an intent named `ReadPost` in our `lex_intents.tf` file. We can add the intent declaration after the `CreatePost` intent.
+Our users may intend to view post details for a specific `PostId`. Let's create an intent named `ReadPost` in our `lex_intents.tf` file. We can add the intent declaration after the `CreatePost` intent.
 
 ```hcl
 // ...
@@ -382,7 +381,7 @@ The only slot that we need in the `ReadPost` intent is `PostId`.
 
 ### UpdatePost intent
 
-Next, is the `UpdatePost` intent. This will allow users to update their posts. For now we won't worry about authentication and authorization, we will address that later when we introduce Amazon Cognito. We will need to be able to update the `PostTitle` and `PostDescription` for a specific post. Therefore we will also need `PostId` slot to query for a specific post.
+Next is the `UpdatePost` intent, allowing users to update their posts. We won't worry about authentication and authorization; we will address that later when we introduce Amazon Cognito. We will need to be able to update the `PostTitle` and `PostDescription` for a specific post. Therefore we will also need `PostId` slot to query for a particular post.
 
 ```hcl
 // ...
@@ -464,7 +463,7 @@ We are prompting for both `PostTitle` and `PostDescription`. However, the user m
 
 ### DeletePost intent
 
-Finally, lets add our `DeletePost` intent. Like the `UpdatePost` intent, we will address authorization later.
+Finally, let's add our `DeletePost` intent. Like the `UpdatePost` intent, we will address authorization later.
 
 ```hcl
 // ...
@@ -502,9 +501,9 @@ resource "aws_lex_intent" "delete_post" {
 }
 ```
 
-At this point we can check our changes in source control and test our bot in the console. Apply the changes by running `terraform apply`
+At this point, we can check our changes in source control and test our bot in the console. Apply the changes by running `terraform apply`
 
-You should have output similar to below after confirming:
+You should have output similar to the below after confirming:
 
 ```txt
 Plan: 3 to add, 0 to change, 0 to destroy.
@@ -523,11 +522,11 @@ aws_lex_intent.update_post: Creation complete after 1s [id=UpdatePost]
 aws_lex_intent.delete_post: Creation complete after 1s [id=DeletePost]
 ```
 
-If you navigate to the console you will see that you have additional intents created.
+If you navigate the console, you will see that you have created additional intents.
 
 ![New intents list](../images/intents_list_console.png)
 
-However, navigating to our bot you will realize intents missing. This is because intents can be associated to any bot and we need to explicitly assign our created intents.
+However, navigating to our bot, you will realize intents are missing. This is because intents can be associated with any bot, and we need to assign our created intents explicitly.
 
 ![Bot missing intents](../images/bot_intents_missing.png)
 
@@ -559,10 +558,8 @@ Let's fix that by adding missing intent blocks to our bot declaration in the fil
 
 Run the command `terraform apply` again to make sure our bot is associated with new intents.
 
-If you refresh the console you will see that our bot is now associated with all CRUD intents.
+If you refresh the console, you will see that our bot is associated with all CRUD intents.
 
 ![Bot intents association](../images/bot_intent_association.png)
 
-You can now test your intents in the Test Bot window. However, as I mentioned earlier, there isn't much being done by our intents. We need to hook some code hook to our bot in the form of AWS Lambda function. So next we will introduce AWS Lambda and update our intents' fulfillment activity to a lambda function.
-
-## Summary
+You can now test your intents in the Test Bot window. However, as I mentioned earlier, there isn't much done by our intents. We need to hook some code hook to our bot in the form of the AWS Lambda function. So next, we will introduce AWS Lambda and update our intents' fulfillment activity to a lambda function.
