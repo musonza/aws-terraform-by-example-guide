@@ -6,7 +6,7 @@ I'm learning the usage of Terraform with AWS provider by example and sharing my 
 
 **Status:** WIP
 
-![Terraform graph](./images/graph-plan.png)
+![Terraform graph](./images/graph-plan.svg)
 
 
 <!-- **Current Plan**
