@@ -9,7 +9,7 @@ I'm learning the usage of Terraform with AWS provider by example and sharing my 
 <details>
 <summary>Click for current Plan</summary>
 
-[View Terraform graph](https://aws-terraform-by-example.com/assets/graph-plan.fa6ce95f.svg)
+[View Terraform graph](https://raw.githubusercontent.com/musonza/aws-terraform-by-example-guide/master/docs/images/graph-plan.svg)
 
 ```json
 # aws_cognito_identity_pool.main will be created
