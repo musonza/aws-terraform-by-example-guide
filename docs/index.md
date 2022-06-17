@@ -1,5 +1,9 @@
-## Status - WIP
+# Hey, I'm Tinashe
 
-## Tinashe Musonza
+Software Engineer
 
-This is a work in a progress as I learn usage of Terraform with AWS provider.
+I'm learning the usage of Terraform with AWS provider by example and sharing my learnings. This is a work in progress, and I will try to make frequent updates.
+
+**Status:** WIP
+
+![Terraform graph](./images/graph-plan.png)
