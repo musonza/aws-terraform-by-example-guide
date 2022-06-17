@@ -10,7 +10,7 @@ module.exports = {
     },
 
     themeConfig: {
-        repo: 'musonza/aws-terraform-by-example-vitepress',
+        repo: 'musonza/aws-terraform-by-example-guide',
         docsDir: 'docs',
         docsBranch: 'master',
         editLinks: true,
@@ -18,7 +18,7 @@ module.exports = {
         // lastUpdatedText: 'Last Updated',
 
         socialLinks: [
-            { icon: 'github', link: 'https://github.com/musonza' },
+            { icon: 'github', link: 'https://github.com/musonza/aws-terraform-by-example-guide' },
             { icon: 'linkedin', link: 'https://linkedin.com/in/srfullstackdeveloper' },
         ],
 
