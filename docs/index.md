@@ -6,10 +6,10 @@ I'm learning the usage of Terraform with AWS provider by example and sharing my 
 
 **Status:** WIP
 
-![Terraform graph](./images/graph-plan.svg)
+<details>
+<summary>Click for current Plan</summary>
 
-
-<!-- **Current Plan**
+[View Terraform graph](https://aws-terraform-by-example.com/assets/graph-plan.fa6ce95f.svg)
 
 ```json
 # aws_cognito_identity_pool.main will be created
@@ -654,4 +654,5 @@ I'm learning the usage of Terraform with AWS provider by example and sharing my 
     }
 
 Plan: 20 to add, 0 to change, 0 to destroy.
-``` -->
+```
+</details>
