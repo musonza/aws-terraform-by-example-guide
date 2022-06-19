@@ -170,3 +170,63 @@ You may get errors similar to
 │   on cognito.tf line 9, in resource "aws_iam_role" "authenticated":
 │    9: resource "aws_iam_role" "authenticated" {
 ```
+
+AWS Cloud9 makes temporary AWS access credentials available when we use AWS Cloud9 EC2 development environment. However, you will need to check the Actions supported by [AWS managed temporary credentials](https://docs.aws.amazon.com/cloud9/latest/user-guide/security-iam.html#auth-and-access-control-temporary-managed-credentials-supported). In our case of AWS Cloud9 EC2 development environment we have some limitations.
+
+
+:::info
+
+You can navigate the console's EC2 instances section and you will see an instance that was created for your Cloud9 environment.
+
+![Cloud9 EC2 instance](../images/cloud9-ec2-instance.png)
+
+:::
+
+
+
+Go to Cloud9 -> Preferences -> AWS Settings and turn off _AWS managed temporary credentials_
+
+![Temporary credentials off](../images/managed_temporary_credentials_off.png)
+
+Running `terraform apply` again with throw the following error.
+
+```
+╷
+│ Error: error configuring Terraform AWS Provider: no valid credential sources for Terraform AWS Provider found.
+│ 
+│ Please see https://registry.terraform.io/providers/hashicorp/aws
+│ for more information about providing credentials.
+│ 
+│ Error: failed to refresh cached credentials, no EC2 IMDS role found, operation error ec2imds: GetMetadata, http response error StatusCode: 404, request to EC2 IMDS failed
+│ 
+│ 
+│   with provider["registry.terraform.io/hashicorp/aws"],
+│   on providers.tf line 10, in provider "aws":
+│   10: provider "aws" {
+│ 
+╵
+```
+
+We get this error because the environment cannot access any AWS services by default if we turn off AWS managed temporary credentials. We need to access AWS services for our Terraform plan to be executed. To address the permission issues, we have the following alternatives:
+
+* Attaching an instance profile to the Amazon EC2 instance that connects to our Cloud9 environment. You can refer to [Create and Use an Instance Profile to Manage Temporary Credentials](https://docs.aws.amazon.com/cloud9/latest/user-guide/credentials.html#credentials-temporary)
+* Store your permanent AWS access credentials in the environment. This is similar to what we did earlier by running the`aws configure` command. See [Create and store permanent access credentials in an Environment](https://docs.aws.amazon.com/cloud9/latest/user-guide/credentials.html#credentials-permanent-create).
+
+## Create an instance profile and attach to EC2
+
+We will use the first option - Attaching an instance profile to the Amazon EC2 instance that connects to our Cloud9 environment. We can use the AWS console or AWS CLI to create and attach the instance profile to our Amazon EC2 instance.
+
+1. Follow the instructions to [Create an instance profile with AWS console](https://docs.aws.amazon.com/cloud9/latest/user-guide/credentials.html#credentials-temporary-create-console)
+
+2. Once you have the profile created, you can follow steps to [Attach an instance profile to an instance with the Amazon EC2 console](https://docs.aws.amazon.com/cloud9/latest/user-guide/credentials.html#credentials-temporary-attach-console)
+
+::: tip
+
+If you don't find the option **Attach/Replace IAM Role** in instance settings. 
+
+Look for Actions > Security > Modify IAM role  
+:::
+
+Run `terraform apply` again, and after accepting the plan, your resources will be created successfully.
+
+
