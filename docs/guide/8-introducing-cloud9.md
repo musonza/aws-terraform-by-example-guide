@@ -222,9 +222,7 @@ We will use the first option - Attaching an instance profile to the Amazon EC2 i
 
 ::: tip
 
-If you don't find the option **Attach/Replace IAM Role** in instance settings. 
-
-Look for Actions > Security > Modify IAM role  
+If you don't find the option **Attach/Replace IAM Role** in instance settings, look for Actions > Security > Modify IAM role  
 :::
 
 Run `terraform apply` again, and after accepting the plan, your resources will be created successfully.
