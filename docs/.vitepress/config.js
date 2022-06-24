@@ -2,8 +2,7 @@ module.exports = {
     lang: 'en-US',
     title: 'AWS and Terraform by example',
     description: 'AWS and Terraform by example',
-
-    lastUpdated: false,
+    lastUpdated: true,
 
     markdown: {
         lineNumbers: true
@@ -15,7 +14,7 @@ module.exports = {
         docsBranch: 'master',
         editLinks: true,
         editLinkText: 'Edit this page on GitHub',
-        // lastUpdatedText: 'Last Updated',
+        lastUpdatedText: 'Last Updated',
 
         socialLinks: [
             { icon: 'github', link: 'https://github.com/musonza/aws-terraform-by-example-guide' },
