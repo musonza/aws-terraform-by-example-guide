@@ -309,3 +309,60 @@ Go ahead and run `terraform destroy` on your local machine.
 
 We want to ensure that when we start with Cloud9 we don't have any resources left over since we will be switching how we track our Terraform state.
 :::
+
+## Terraform Backend Configuration
+
+Before moving on to **Cloud9**, let's talk about Terraform Backend Configuration. We have been maintaining our Terraform state on our local machine. However, this won't scale in a collaborative environment. Instead, we can specify a backend that defines where Terraform stores its state data files.
+
+A backend defines where Terraform stores its state data files. For example, we can change from the default `local` backend to an `s3` backend.
+
+[Learn more on Terraform Backend Configuration](https://www.terraform.io/language/settings/backends/configuration)
+
+
+`providers.tf`
+
+```hcl{9-13}
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.8"
+    }
+  }
+
+  backend "s3" {
+    bucket = "terraform-state-aws-by-example"
+    key    = "main/terraform.tfstate"
+    region = "us-east-1"
+  }
+}
+
+provider "aws" {
+  region  = var.aws_region
+  profile = "aws-terraform-example"
+}
+```
+
+Attempt to run terraform commands, and you will encounter an error because you have to re-initialize Terraform each time you switch the backend.
+
+```
+╷
+│ Error: Backend initialization required, please run "terraform init"
+│
+│ Reason: Initial configuration of the requested backend "s3"
+```
+
+Running `terraform init` command
+
+```
+Initializing the backend...
+╷
+│ Error: Failed to get existing workspaces: S3 bucket does not exist.
+│
+│ The referenced S3 bucket must have been previously created. If the S3 bucket
+│ was created within the last minute, please wait for a minute or two and try
+│ again.
+│
+```
+
+So make sure to head to the AWS console, create a unique bucket (must be unique across all bucket names in AWS), and re-run the init command.
