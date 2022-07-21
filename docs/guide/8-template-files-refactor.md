@@ -1,6 +1,6 @@
 # Template files
 
-You may have noticed code that similar to the following
+You may have noticed code that similar to the following:
 
 ```hcl
 # IAM role to use with authenticated identities
@@ -31,14 +31,15 @@ EOF
 }
 ```
 
-While the `assume_role_policy` is not that long, in some cases we may have longer policies which will result in terraform files not readable. Our goal in this section is refactoring any of the policies into separate files called templates. Then we will pull in the contents using `templatefile` a Terraform function. Terraform has a number of built-in functions that can be utilized to withing expressions to transform and combine values.
+While the `assume_role_policy` is not that long, we may have more extended policies in some cases, which will result in unreadable terraform files. This section aims to refactor any policies into separate files called templates. Then we will pull in the contents using `templatefile`, a Terraform function. Terraform has several built-in functions that can be utilized to transform and combine values within expressions.
 
-Create a `templates` folder in the root of the project.
+Create a `templates` folder at the root of the project.
 
 ```shell
 $ mkdir templates
 ```
 
+Add the following JSON files to the templates directory.
 
 ```
 ubuntu:~/environment/aws-terraform-by-example/templates
@@ -104,6 +105,8 @@ ubuntu:~/environment/aws-terraform-by-example/templates
   ]
 }
 ```
+
+Now let's update cognito.tf to the following.
 
 `/cognito.tf`
 
@@ -225,6 +228,8 @@ resource "aws_cognito_user_pool" "classifieds" {
 }
 ```
 
+Make updates to lambda.tf file.
+
 `/lambda.tf`
 
 ```hcl{20,51,67}
@@ -302,5 +307,4 @@ resource "aws_iam_role_policy_attachment" "allow_dynamodb_attach" {
   role       = aws_iam_role.iam_for_classifieds_lambda.name
   policy_arn = aws_iam_policy.allow_dynamodb.arn
 }
-
 ```
