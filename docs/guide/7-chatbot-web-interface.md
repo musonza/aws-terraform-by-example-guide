@@ -304,7 +304,7 @@ Rebuild the app again and navigate to the provided URL on your machine.
 
 The next thing we will cover is how we can use a cloud-based integrated development environment  (IDE). The approach has a lot of benefits that we will cover. We will continue building our application after setting up the cloud-based integrated development environment.
 
-::: danger
+::: danger  Destroy environment
 Go ahead and run `terraform destroy` on your local machine.
 
 We want to ensure that when we start with Cloud9 we don't have any resources left over since we will be switching how we track our Terraform state.
