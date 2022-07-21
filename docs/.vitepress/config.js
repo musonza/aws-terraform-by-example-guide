@@ -5,7 +5,7 @@ module.exports = {
     lastUpdated: true,
 
     markdown: {
-        lineNumbers: true
+        lineNumbers: false
     },
 
     themeConfig: {
@@ -46,7 +46,8 @@ function getGuideSidebar() {
                 { text: 'Chatbot code hooks', link: '/guide/5-chatbot-code-hooks' },
                 { text: 'Data storage', link: '/guide/6-data-storage' },
                 { text: 'Chatbot Web Interface', link: '/guide/7-chatbot-web-interface' },
-                { text: 'Introducing Cloud9', link: '/guide/8-introducing-cloud9' },
+                { text: 'Template files', link: '/guide/8-template-files-refactor'},
+                { text: 'Introducing Cloud9', link: '/guide/9-introducing-cloud9' },
             ]
         }
     ]
